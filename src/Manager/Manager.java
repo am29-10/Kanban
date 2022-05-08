@@ -1,3 +1,5 @@
+package Manager;
+
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -107,7 +109,7 @@ public class Manager {
     }
 
     public void removeEpic(int idEpic) {
-        if (epics.containsKey(idEpic)) {
+        if (epics.containsKey(idEpic) && (getSubTaskForEpic(idEpic) != null)) {
             for (int i = 0; i < getSubTaskForEpic(idEpic).size(); i++) {
                 subTasks.remove(getSubTaskForEpic(idEpic).get(i));
             }
@@ -116,7 +118,7 @@ public class Manager {
     }
 
     public void removeSubTask(int idSubTusk) {
-        if (subTasks.containsKey(idSubTusk)) {
+        if (subTasks.containsKey(idSubTusk) && (getSubTaskForEpic(idEpic) != null)) {
             getSubTaskForEpic(getSubTask(idSubTusk).getEpicId()).remove(idSubTusk);
             updateStatusEpic(getSubTask(idSubTusk).getEpicId());
             subTasks.remove(idSubTusk);
@@ -146,13 +148,10 @@ public class Manager {
     public void updateStatusEpic(int idEpic) {    //Обновление статуса Epic'а
         int statusInProgress = 0;
         int statusDone = 0;
-        int statusNew = 0;
         if (getSubTaskForEpic(idEpic) != null) {
             for (int i = 0; i < getSubTaskForEpic(idEpic).size(); i++) {
-                if (getSubTask(getSubTaskForEpic(idEpic).get(i)).equals(TaskStatus.IN_PROGRESS)) {
+                if (getSubTask(getSubTaskForEpic(idEpic).get(i)).getStatus().equals(TaskStatus.IN_PROGRESS)) {
                     ++statusInProgress;
-                } if (getSubTask(getSubTaskForEpic(idEpic).get(i)).equals(TaskStatus.NEW)) {
-                    ++statusNew;
                 } else {
                     ++statusDone;
                 }
