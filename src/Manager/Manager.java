@@ -109,7 +109,7 @@ public class Manager {
     }
 
     public void removeEpic(int idEpic) {
-        if (epics.containsKey(idEpic) && (getSubTaskForEpic(idEpic) != null)) {
+        if ((epics.containsKey(idEpic)) && (getSubTaskForEpic(idEpic) != null)) {
             for (int i = 0; i < getSubTaskForEpic(idEpic).size(); i++) {
                 subTasks.remove(getSubTaskForEpic(idEpic).get(i));
             }
@@ -118,7 +118,7 @@ public class Manager {
     }
 
     public void removeSubTask(int idSubTusk) {
-        if (subTasks.containsKey(idSubTusk) && (getSubTaskForEpic(idEpic) != null)) {
+        if ((subTasks.containsKey(idSubTusk)) && (getSubTaskForEpic(idEpic) != null)) {
             getSubTaskForEpic(getSubTask(idSubTusk).getEpicId()).remove(idSubTusk);
             updateStatusEpic(getSubTask(idSubTusk).getEpicId());
             subTasks.remove(idSubTusk);
