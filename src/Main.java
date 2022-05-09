@@ -1,9 +1,8 @@
+import manager.Manager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
-
-import java.util.Collection;
 
 public class Main {
 
