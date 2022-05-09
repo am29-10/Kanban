@@ -1,4 +1,4 @@
-package Manager;
+package manager;
 
 import tasks.Epic;
 import tasks.SubTask;
@@ -34,10 +34,12 @@ public class Manager {
     }
 
     public void createSubTask(SubTask subTask) {
-        subTask.setId(++idSubTusk);
-        subTasks.put(subTask.getId(), subTask);
-        getSubTaskForEpic(subTask.getEpicId()).add(subTask.getId());
-        updateStatusEpic(subTask.getEpicId());
+            subTask.setId(++idSubTusk);
+            subTasks.put(subTask.getId(), subTask);
+        if (getSubTaskForEpic(subTask.getId()) != null) {
+            getSubTaskForEpic(subTask.getEpicId()).add(subTask.getId());
+            updateStatusEpic(subTask.getEpicId());
+        }
 
     }
 
@@ -118,7 +120,7 @@ public class Manager {
     }
 
     public void removeSubTask(int idSubTusk) {
-        if ((subTasks.containsKey(idSubTusk)) && (getSubTaskForEpic(idEpic) != null)) {
+        if ((subTasks.containsKey(idSubTusk)) && (getSubTaskForEpic(getSubTask(idSubTusk).getId()) != null)) {
             getSubTaskForEpic(getSubTask(idSubTusk).getEpicId()).remove(idSubTusk);
             updateStatusEpic(getSubTask(idSubTusk).getEpicId());
             subTasks.remove(idSubTusk);
