@@ -99,19 +99,19 @@ public class Manager {
     public void clearSubTask() {
         subTasks.clear();
         for (Integer id : epics.keySet()) {
-            getEpic(id).setStatus(TaskStatus.NEW);
-            getEpic(id).setSubTasksId(null);
+            if (getEpic(id) != null) {
+                getEpic(id).setStatus(TaskStatus.NEW);
+                getEpic(id).setSubTasksId(null);
+            }
         }
     }
 
     public void removeTask(int idTask) {
-        if (tasks.containsKey(idTask)) {
-            tasks.remove(idTask);
-        }
+        tasks.remove(idTask);
     }
 
     public void removeEpic(int idEpic) {
-        if ((epics.containsKey(idEpic)) && (getSubTaskForEpic(idEpic) != null)) {
+        if (getSubTaskForEpic(idEpic) != null) {
             for (int i = 0; i < getSubTaskForEpic(idEpic).size(); i++) {
                 subTasks.remove(getSubTaskForEpic(idEpic).get(i));
             }
@@ -120,10 +120,12 @@ public class Manager {
     }
 
     public void removeSubTask(int idSubTusk) {
-        if ((subTasks.containsKey(idSubTusk)) && (getSubTaskForEpic(getSubTask(idSubTusk).getId()) != null)) {
-            getSubTaskForEpic(getSubTask(idSubTusk).getEpicId()).remove(idSubTusk);
-            updateStatusEpic(getSubTask(idSubTusk).getEpicId());
-            subTasks.remove(idSubTusk);
+        if (getSubTask(idSubTusk) != null) {
+            if (getSubTaskForEpic(getSubTask(idSubTusk).getId()) != null) {
+                    getSubTaskForEpic(getSubTask(idSubTusk).getEpicId()).remove(idSubTusk);
+                    updateStatusEpic(getSubTask(idSubTusk).getEpicId());
+                    subTasks.remove(idSubTusk);
+            }
         }
     }
 
@@ -152,18 +154,26 @@ public class Manager {
         int statusDone = 0;
         if (getSubTaskForEpic(idEpic) != null) {
             for (int i = 0; i < getSubTaskForEpic(idEpic).size(); i++) {
-                if (getSubTask(getSubTaskForEpic(idEpic).get(i)).getStatus().equals(TaskStatus.IN_PROGRESS)) {
-                    ++statusInProgress;
-                } else {
-                    ++statusDone;
+                if (getSubTask(getSubTaskForEpic(idEpic).get(i)) != null) {
+                    if (getSubTask(getSubTaskForEpic(idEpic).get(i)).getStatus().equals(TaskStatus.IN_PROGRESS)) {
+                        ++statusInProgress;
+                    } else {
+                        ++statusDone;
+                    }
                 }
             }
-            if (statusInProgress < 1 && statusDone < 1) {
-                getEpic(idEpic).setStatus(TaskStatus.NEW);
+            if (statusInProgress == 0 && statusDone == 0) {
+                if (getEpic(idEpic) != null) {
+                    getEpic(idEpic).setStatus(TaskStatus.NEW);
+                }
             } else if (statusInProgress >= 1) {
-                getEpic(idEpic).setStatus(TaskStatus.IN_PROGRESS);
+                if (getEpic(idEpic) != null) {
+                    getEpic(idEpic).setStatus(TaskStatus.IN_PROGRESS);
+                }
             } else {
-                getEpic(idEpic).setStatus(TaskStatus.DONE);
+                if (getEpic(idEpic) != null) {
+                    getEpic(idEpic).setStatus(TaskStatus.DONE);
+                }
             }
         }
     }
