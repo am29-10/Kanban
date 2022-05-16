@@ -1,4 +1,5 @@
-import manager.Manager;
+import manager.Managers;
+import manager.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -7,7 +8,7 @@ import tasks.TaskStatus;
 public class Main {
 
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
 
         Task task1 = new Task("Утренняя пробежка", "Бег на стадионе", TaskStatus.NEW);
         manager.createTask(task1);
@@ -26,46 +27,19 @@ public class Main {
         SubTask subTaskForEpic11 = new SubTask("Прочитать Достоевского", "Преступление и наказание", TaskStatus.NEW, 2);
         manager.createSubTask(subTaskForEpic11);
 
-        System.out.println();
-        System.out.println(manager.getAllTask());
-        System.out.println("-------------------------");
-        System.out.println(manager.getAllEpic());
-        System.out.println("-------------------------");
-        System.out.println(manager.getAllSubTask());
-        System.out.println("-------------------------");
-        System.out.println("-------------------------");
 
-        task1.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateTask(task1);
-        System.out.println(task1);
-        System.out.println("-------------------------");
-
-        task2.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateTask(task2);
-        System.out.println(task2);
-        System.out.println("-------------------------");
-
-        subTaskForEpic1.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateSubTask(subTaskForEpic1);
-        System.out.println(subTaskForEpic1);
-        System.out.println("-------------------------");
-
-        subTaskForEpic2.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateSubTask(subTaskForEpic2);
-        System.out.println(subTaskForEpic2);
-        System.out.println("-------------------------");
-
-        System.out.println(epic);
-        System.out.println("-------------------------");
-        System.out.println("-------------------------");
-
-        manager.removeTask(1);
-        System.out.println(manager.getAllTask());
-        System.out.println("-------------------------");
-
-        manager.removeEpic(2);
-        System.out.println(manager.getAllEpic());
-        System.out.println("-------------------------");
+        System.out.println(manager.getTask(1));
+        System.out.println(manager.getTask(2));
+        System.out.println(manager.getEpic(1));
+        System.out.println(manager.getEpic(2));
+        System.out.println(manager.getSubTask(1));
+        System.out.println(manager.getTask(1));
+        System.out.println(manager.getTask(2));
+        System.out.println(manager.getEpic(1));
+        System.out.println(manager.getEpic(2));
+        System.out.println(manager.getSubTask(2));
+        System.out.println("---------------------------------------");
+        System.out.println(manager.getHistory());
 
     }
 }
