@@ -3,6 +3,7 @@ package manager;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -11,7 +12,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private static final int SIZE_HISTORY = 10;
 
     public InMemoryHistoryManager() {
-        this.history = new ArrayList<>();
+        history = new LinkedList<>();
     }
 
     @Override
