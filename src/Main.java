@@ -30,14 +30,14 @@ public class Main {
 
         System.out.println(manager.getTask(1));
         System.out.println(manager.getTask(2));
-        System.out.println(manager.getEpic(1));
-        System.out.println(manager.getEpic(2));
-        System.out.println(manager.getSubTask(1));
+        System.out.println(manager.getEpic(3));
+        System.out.println(manager.getEpic(6));
+        System.out.println(manager.getSubTask(4));
         System.out.println(manager.getTask(1));
         System.out.println(manager.getTask(2));
-        System.out.println(manager.getEpic(1));
-        System.out.println(manager.getEpic(2));
-        System.out.println(manager.getSubTask(2));
+        System.out.println(manager.getEpic(6));
+        System.out.println(manager.getEpic(3));
+        System.out.println(manager.getSubTask(7));
         System.out.println("---------------------------------------");
         System.out.println(manager.getHistory());
 
