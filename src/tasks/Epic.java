@@ -9,11 +9,11 @@ public class Epic extends Task {
 
     public Epic(String title, String description, TaskStatus status) {
         super(title, description, status);
-        this.subTasksId = new ArrayList<>();
+        subTasksId = new ArrayList<>();
     }
 
-    public ArrayList<Integer> getSubTasksId() {
-        return (ArrayList<Integer>) subTasksId;
+    public List<Integer> getSubTasksId() {
+        return subTasksId;
     }
 
     public void setSubTasksId(ArrayList<Integer> subTasksId) {
@@ -37,7 +37,7 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                ", title='" + title + '\'' +
+                "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status='" + status + '\'' +
