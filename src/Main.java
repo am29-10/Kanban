@@ -31,7 +31,7 @@ public class Main {
 
         System.out.println("Получаем имеющиеся задачи (проверка обновления истории):");
         System.out.println(manager.getEpic(1));
-        System.out.println(manager.getSubTask(2));
+        //System.out.println(manager.getSubTask(2));
 
         System.out.println("Вывод на экран списка истории: ");
         System.out.println(manager.getHistory());
