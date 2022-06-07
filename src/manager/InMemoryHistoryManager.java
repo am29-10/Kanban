@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> tail;
     private Node<Task> head;
     private int size;
-    private final Map<Integer, Node> history;
+    private final Map<Integer, Node<Task>> history;
     List<Task> historyTask;
     public InMemoryHistoryManager() {
         history = new HashMap<>();
@@ -41,7 +41,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (oldHead == null)
             tail = newNode;
         else {
-            oldHead.prev = newNode;
+            oldHead.setPrev(newNode);
         }
         size++;
     }
@@ -53,37 +53,39 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (oldTail == null)
             head = newNode;
         else {
-            oldTail.next = newNode;
+            oldTail.setNext(newNode);
         }
         size++;
     }
 
     public void removeNode(Node<Task> taskNode) {
         if (taskNode != null) {
-            final Node<Task> prev = taskNode.prev;
-            final Node<Task> next = taskNode.next;
+            final Node<Task> prev = taskNode.getPrev();
+            final Node<Task> next = taskNode.getNext();
 
             if (prev == null) {
                 head = next;
             } else {
-                prev.next = taskNode.next;
+                prev.setNext(taskNode.getNext());
+                head.setPrev(null);
             }
 
             if (next == null) {
                 tail = prev;
             } else {
-                next.prev = taskNode.prev;
+                next.setPrev(taskNode.getPrev());
+                tail.setNext(null);
             }
             size--;
         }
     }
 
     public List<Task> getTasks() {
-        historyTask = new ArrayList<>();
+        historyTask = new ArrayList<>(size);
         Node<Task> temp = head;
         while (temp != null) {
-            historyTask.add(temp.task);
-            temp = temp.next;
+            historyTask.add(temp.getTask());
+            temp = temp.getNext();
         }
         return historyTask;
     }
