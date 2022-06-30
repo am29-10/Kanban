@@ -1,3 +1,5 @@
+import manager.FileBackedTasksManager;
+import manager.InMemoryTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
@@ -5,10 +7,14 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 public class Main {
 
-    public static void main(String[] args) {
-        TaskManager manager = Managers.getDefault();
+    public static void main(String[] args) throws IOException {
+        FileBackedTasksManager manager = new FileBackedTasksManager(new File("Test.csv"));
 
         Epic epic = new Epic("Сделать уроки", "Написать конспекты", TaskStatus.NEW);
         manager.createEpic(epic);
@@ -42,10 +48,15 @@ public class Main {
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());
 
-        System.out.println("Удаляем эпик в котором есть подзадачи (проверка удаления как самого эпика, так и его " +
-                "подзадач из истории):");
-        manager.removeEpic(1);
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getHistory().size());
+        FileBackedTasksManager recoveryManager = manager.loadFromFile(new File("Test.csv"));
+        System.out.println("Восстановленный список всех задач:");
+        System.out.println(recoveryManager.getEpic(1));
+        System.out.println(recoveryManager.getEpic(5));
+        System.out.println(recoveryManager.getSubTask(3));
+        System.out.println(recoveryManager.getSubTask(4));
+        System.out.println("Восстановленная История просмотров задач:");
+        System.out.println(recoveryManager.getHistory());
+
+
     }
 }

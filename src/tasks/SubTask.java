@@ -18,6 +18,10 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
+    public TypeTasks getType() {
+        return TypeTasks.SUBTASK;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

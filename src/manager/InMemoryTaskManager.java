@@ -8,11 +8,11 @@ import tasks.TaskStatus;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int id = 0;
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, SubTask> subTasks;
-    private final HistoryManager history;
+    protected int id = 0;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, SubTask> subTasks;
+    protected final HistoryManager history;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();

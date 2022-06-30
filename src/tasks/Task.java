@@ -8,6 +8,7 @@ public class Task {
     protected String description;
     protected int id;
     protected TaskStatus status;
+    protected TypeTasks type;
 
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
@@ -41,6 +42,10 @@ public class Task {
 
     public TaskStatus getStatus() {
         return status;
+    }
+
+    public TypeTasks getType() {
+        return TypeTasks.TASK;
     }
 
     public void setStatus(TaskStatus status) {
