@@ -1,5 +1,6 @@
 package manager;
 
+import exception.ManagerSaveException;
 import tasks.*;
 
 
@@ -16,7 +17,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.file = file;
     }
 
-    public void save() {
+    private void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
 
             bufferedWriter.write(HEAD);
@@ -38,11 +39,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
             bufferedWriter.write(historyToString(history));
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            throw new ManagerSaveException("Ошибка при записи файла");
         }
     }
 
-    public String toString(Task task) {
+    private String toString(Task task) {
         String epicId = "";
         if (task != null) {
             if (task.getType() == TypeTasks.SUBTASK) {
@@ -54,7 +55,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return null;
     }
 
-    public static Task fromString(String value) {
+    private static Task fromString(String value) {
         Task task = null;
         if (value != null && !value.trim().isEmpty()) {
             String[] values = value.split(", ");
@@ -83,7 +84,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return task;
     }
 
-    public static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         String idLineHistory;
         List<String> idsHistory = new ArrayList<>();
         for (Task task : manager.getHistory()) {
@@ -93,7 +94,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return idLineHistory;
     }
 
-    public static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         List<Integer> idsHistory = new ArrayList<>();
         if (value != null && !value.trim().isEmpty()) {
             String[] values = value.split(", ");
