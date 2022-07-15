@@ -1,7 +1,7 @@
 package exception;
 
 public class ManagerSaveException extends RuntimeException {
-    public ManagerSaveException(String message) {
+    public ManagerSaveException(final String message) {
         super(message);
     }
 }

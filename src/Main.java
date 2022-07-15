@@ -9,6 +9,7 @@ import tasks.TaskStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
@@ -16,16 +17,16 @@ public class Main {
     public static void main(String[] args) throws IOException {
         FileBackedTasksManager manager = new FileBackedTasksManager(new File("Test.csv"));
 
-        Epic epic = new Epic("Сделать уроки", "Написать конспекты", TaskStatus.NEW);
+        Epic epic = new Epic("Сделать уроки", "Написать конспекты", TaskStatus.NEW, LocalDateTime.of(2022, 1, 1, 1, 1), 60);
         manager.createEpic(epic);
-        SubTask subTaskForEpic1 = new SubTask("Сделать алгебру", "Конспект по логарифмам", TaskStatus.IN_PROGRESS, 1);
+        SubTask subTaskForEpic1 = new SubTask("Сделать алгебру", "Конспект по логарифмам", TaskStatus.IN_PROGRESS, LocalDateTime.of(2022, 2, 2, 2, 2), 60, 1);
         manager.createSubTask(subTaskForEpic1);
-        SubTask subTaskForEpic2 = new SubTask("Сделать геометрию", "Конспект по теореме Пифагора", TaskStatus.NEW, 1);
+        SubTask subTaskForEpic2 = new SubTask("Сделать геометрию", "Конспект по теореме Пифагора", TaskStatus.NEW, LocalDateTime.of(2022, 3, 3, 3, 3), 60, 1);
         manager.createSubTask(subTaskForEpic2);
-        SubTask subTaskForEpic3 = new SubTask("Сделать физику", "Конспект по закону Ома", TaskStatus.NEW, 1);
+        SubTask subTaskForEpic3 = new SubTask("Сделать физику", "Конспект по закону Ома", TaskStatus.NEW, LocalDateTime.of(2022, 4, 4, 4, 4), 60, 1);
         manager.createSubTask(subTaskForEpic3);
 
-        Epic epic1 = new Epic("Прочитать книжку", "Чтение в библиотеке", TaskStatus.NEW);
+        Epic epic1 = new Epic("Прочитать книжку", "Чтение в библиотеке", TaskStatus.NEW, LocalDateTime.of(2022, 5, 5, 5, 5), 60);
         manager.createEpic(epic1);
 
         System.out.println("Получаем задачи:");
