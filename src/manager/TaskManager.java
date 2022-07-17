@@ -18,11 +18,11 @@ public interface TaskManager {
 
     void createSubTask(SubTask subTask);
 
-    Collection<Task> getAllTask();
+    List<Task> getAllTask();
 
-    Collection<Epic> getAllEpic();
+    List<Epic> getAllEpic();
 
-    Collection<SubTask> getAllSubTask();
+    List<SubTask> getAllSubTask();
 
     Task getTask(int idTask);
 

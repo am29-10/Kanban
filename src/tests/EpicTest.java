@@ -1,8 +1,11 @@
-package tasks;
+package tests;
 
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

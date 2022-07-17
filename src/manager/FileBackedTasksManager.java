@@ -53,7 +53,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 epicId = String.valueOf(((SubTask) task).getEpicId());
             }
             return String.format("%s, %s, %s, %s, %s, %s, %s, %s", task.getId(), task.getType(), task.getTitle(),
-                    task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration(), epicId);
+                    task.getStatus(), task.getDescription(), task.getStartTime().format(formatter), task.getDuration(), epicId);
         }
         return null;
     }
@@ -68,7 +68,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             String title = values[2];
             TaskStatus status = TaskStatus.valueOf(values[3]);
             String description = values[4];
-            LocalDateTime startTime = LocalDateTime.parse(values[5]);
+            LocalDateTime startTime = LocalDateTime.parse(values[5], formatter);
             Long duration = Long.valueOf(values[6]);
 
 

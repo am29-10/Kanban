@@ -47,7 +47,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createEpic(Epic epic) {
         checkIntersectionByTaskTime(epic);
-        checkIntersectionByTaskTime(epic);
         epic.setId(++id);
         epics.put(epic.getId(), epic);
         listOfPrioritizedTasks.add(epic);
@@ -67,18 +66,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Collection<Task> getAllTask() { // Получение массива всех задач для конкретного типа задачи
-        return tasks.values();
+    public List<Task> getAllTask() { // Получение массива всех задач для конкретного типа задачи
+        return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public Collection<Epic> getAllEpic() {
-        return epics.values();
+    public List<Epic> getAllEpic() {
+        return new ArrayList<>(epics.values());
     }
 
     @Override
-    public Collection<SubTask> getAllSubTask() {
-        return subTasks.values();
+    public List<SubTask> getAllSubTask() {
+        return new ArrayList<>(subTasks.values());
     }
 
     @Override
