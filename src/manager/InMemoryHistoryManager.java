@@ -9,7 +9,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private Node<Task> tail;
     private Node<Task> head;
-    //private int size;
     private final Map<Integer, Node<Task>> history;
     List<Task> historyTask;
     public InMemoryHistoryManager() {
@@ -35,17 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    /* public void linkFirst(Task element) {
-        final Node<Task> oldHead = head;
-        final Node<Task> newNode = new Node(element, oldHead, null);
-        head = newNode;
-        if (oldHead == null)
-            tail = newNode;
-        else {
-            oldHead.setPrev(newNode);
-        }
-        size++;
-    } */
 
     public Node<Task> linkLast(Task element) {
         Node<Task> oldTail = tail;
@@ -56,7 +44,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         else {
             oldTail.setNext(newNode);
         }
-        //size++;
         return newNode;
     }
 
@@ -78,7 +65,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 next.setPrev(prev);
                 tail.setNext(null);
             }
-            //size--;
             taskNode.setTask(null);
         }
     }
