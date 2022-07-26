@@ -3,11 +3,9 @@ package manager;
 import exception.ManagerDateTimeException;
 import tasks.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int id = 0;
@@ -37,47 +35,55 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(Task task) { // Создание задачи конкретного типа
+    public Task createTask(Task task) { // Создание задачи конкретного типа
         checkIntersectionByTaskTime(task);
-        task.setId(++id);
+        if (task.getId() == 0) {
+            task.setId(++id);
+        }
         tasks.put(task.getId(), task);
         listOfPrioritizedTasks.add(task);
+        return task;
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         checkIntersectionByTaskTime(epic);
-        epic.setId(++id);
+        if (epic.getId() == 0) {
+            epic.setId(++id);
+        }
         epics.put(epic.getId(), epic);
         listOfPrioritizedTasks.add(epic);
+        return epic;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
+    public SubTask createSubTask(SubTask subTask) {
         checkIntersectionByTaskTime(subTask);
-        subTask.setId(++id);
+        if (subTask.getId() == 0) {
+            subTask.setId(++id);
+        }
         subTasks.put(subTask.getId(), subTask);
         listOfPrioritizedTasks.add(subTask);
         if (epics.containsKey(subTask.getEpicId())) {
             getSubTaskForEpic(subTask.getEpicId()).add(subTask.getId());
             updateStatusEpic(subTask.getEpicId());
         }
-
+        return subTask;
     }
 
     @Override
-    public List<Task> getAllTask() { // Получение массива всех задач для конкретного типа задачи
-        return new ArrayList<>(tasks.values());
+    public Map<Integer, Task> getAllTask() {
+        return tasks;
     }
 
     @Override
-    public List<Epic> getAllEpic() {
-        return new ArrayList<>(epics.values());
+    public Map<Integer, Epic> getAllEpic() {
+        return epics;
     }
 
     @Override
-    public List<SubTask> getAllSubTask() {
-        return new ArrayList<>(subTasks.values());
+    public Map<Integer, SubTask> getAllSubTask() {
+        return subTasks;
     }
 
     @Override
@@ -200,31 +206,34 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) { // Обновление всех типов задач
+    public Task updateTask(Task task) { // Обновление всех типов задач
         if (tasks.containsKey(task.getId())) {
             checkIntersectionByTaskTime(task);
             tasks.put(task.getId(), task);
             listOfPrioritizedTasks.add(task);
         }
+        return task;
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public Epic updateEpic(Epic epic) {
         if (epics.containsKey(epic.getId())) {
             checkIntersectionByTaskTime(epic);
             epics.put(epic.getId(), epic);
             listOfPrioritizedTasks.add(epic);
         }
+        return epic;
     }
 
     @Override
-    public void updateSubTask(SubTask subTask) {
+    public SubTask updateSubTask(SubTask subTask) {
         if (subTasks.containsKey(subTask.getId())) {
             checkIntersectionByTaskTime(subTask);
             subTasks.put(subTask.getId(), subTask);
             updateStatusEpic(subTask.getEpicId());
             listOfPrioritizedTasks.add(subTask);
         }
+        return subTask;
     }
 
     @Override
@@ -263,18 +272,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public LocalDateTime getterEpicTaskStartTime(List<Integer> listOfSubTaskId) {
-        return getEpicTaskStartTime(listOfSubTaskId);
+    public LocalDateTime getterEpicStartTime(List<Integer> listOfSubTaskId) {
+        return getEpicStartTime(listOfSubTaskId);
     }
 
     @Override
-    public long getterEpicTaskDuration(List<Integer> listOfSubTaskId) {
-        return getEpicTaskDuration(listOfSubTaskId);
+    public long getterEpicDuration(List<Integer> listOfSubTaskId) {
+        return getEpicDuration(listOfSubTaskId);
     }
 
     @Override
-    public LocalDateTime getterEpicTaskEndTime(List<Integer> listOfSubTaskId) {
-        return getEpicTaskEndTime(listOfSubTaskId);
+    public LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId) {
+        return getEpicEndTime(listOfSubTaskId);
     }
 
     @Override
@@ -282,7 +291,7 @@ public class InMemoryTaskManager implements TaskManager {
         return listOfPrioritizedTasks;
     }
 
-    public LocalDateTime getEpicTaskStartTime(List<Integer> listOfSubTaskId) {
+    public LocalDateTime getEpicStartTime(List<Integer> listOfSubTaskId) {
         try {
             SubTask subTaskForStartTimeMin;
 
@@ -304,18 +313,18 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public long getEpicTaskDuration(List<Integer> listOfSubTaskId) {
-        long durationEpicTask = 0;
+    public long getEpicDuration(List<Integer> listOfSubTaskId) {
+        long durationEpic = 0;
         for (var id : listOfSubTaskId) {
             SubTask subTask = subTasks.get(id);
             if (subTask != null) {
-                durationEpicTask += subTask.getDuration();
+                durationEpic += subTask.getDuration();
             }
         }
-        return durationEpicTask;
+        return durationEpic;
     }
 
-    public LocalDateTime getEpicTaskEndTime(List<Integer> listOfSubTaskId) {
+    public LocalDateTime getEpicEndTime(List<Integer> listOfSubTaskId) {
         try {
             SubTask subTaskForStartTimeMax;
 

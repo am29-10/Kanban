@@ -5,24 +5,21 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public interface TaskManager {
 
-    void createTask(Task task);
+    Task createTask(Task task);
 
-    void createEpic(Epic epic);
+    Epic createEpic(Epic epic);
 
-    void createSubTask(SubTask subTask);
+    SubTask createSubTask(SubTask subTask);
 
-    List<Task> getAllTask();
+    Map<Integer, Task> getAllTask();
 
-    List<Epic> getAllEpic();
+    Map<Integer, Epic> getAllEpic();
 
-    List<SubTask> getAllSubTask();
+    Map<Integer, SubTask> getAllSubTask();
 
     Task getTask(int idTask);
 
@@ -44,21 +41,21 @@ public interface TaskManager {
 
     void removeSubTask(int idSubTusk);
 
-    void updateTask(Task task);
+    Task updateTask(Task task);
 
-    void updateEpic(Epic epic);
+    Epic updateEpic(Epic epic);
 
-    void updateSubTask(SubTask subTask);
+    SubTask updateSubTask(SubTask subTask);
 
     void updateStatusEpic(int idEpic);
 
     List<? extends Task> getHistory();
 
-    LocalDateTime getterEpicTaskStartTime(List<Integer> listOfSubtaskIdOfTheFirstEpicTask);
+    LocalDateTime getterEpicStartTime(List<Integer> listOfSubtaskIdOfTheFirstEpic);
 
-    long getterEpicTaskDuration(List<Integer> listOfSubtaskIdOfTheFirstEpicTask);
+    long getterEpicDuration(List<Integer> listOfSubtaskIdOfTheFirstEpic);
 
-    LocalDateTime getterEpicTaskEndTime(List<Integer> listOfSubTaskId);
+    LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId);
 
     Set<Task> getterPrioritizedTasks();
 }

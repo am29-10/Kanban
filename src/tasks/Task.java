@@ -22,6 +22,7 @@ public class Task {
         this.startTime = startTime;
         this.duration = duration;
         this.endTime = getEndTime();
+        this.type = getType();
     }
 
     public Task(int id, String title, String description, TaskStatus status, LocalDateTime startTime, long duration) {
@@ -32,6 +33,7 @@ public class Task {
         this.startTime = startTime;
         this.duration = duration;
         this.endTime = getEndTime();
+        this.type = getType();
     }
 
     public LocalDateTime getEndTime() {

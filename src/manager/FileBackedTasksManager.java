@@ -12,29 +12,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
-    private final File file;
-    private static final String HEAD = "id, type, name, status, description, epic";
+    private File file;
+    private static final String HEAD = "id, type, name, status, description, dateTime, duration, epic";
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
 
-    private void save() {
+    public FileBackedTasksManager() {
+    }
+
+    public void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
 
             bufferedWriter.write(HEAD);
             bufferedWriter.newLine();
 
-            for (Task task : getAllTask()) {
+            for (Task task : getAllTask().values()) {
                 bufferedWriter.write(toString(task) + "\n");
             }
 
-            for (Epic epic : getAllEpic()) {
+            for (Epic epic : getAllEpic().values()) {
                 bufferedWriter.write(toString(epic) + "\n");
             }
 
-            for (SubTask subTask : getAllSubTask()) {
+            for (SubTask subTask : getAllSubTask().values()) {
                 bufferedWriter.write(toString(subTask) + "\n");
             }
 
@@ -46,7 +49,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private String toString(Task task) {
+    public String toString(Task task) {
         String epicId = "";
         if (task != null) {
             if (task.getType() == TypeTasks.SUBTASK) {
@@ -58,7 +61,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return null;
     }
 
-    private static Task fromString(String value) {
+    public static Task fromString(String value) {
         Task task = null;
         if (value != null && !value.trim().isEmpty()) {
             String[] values = value.split(", ");
@@ -90,7 +93,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return task;
     }
 
-    private static String historyToString(HistoryManager manager) {
+    public String historyToString(HistoryManager manager) {
         String idLineHistory;
         List<String> idsHistory = new ArrayList<>();
         for (Task task : manager.getHistory()) {
@@ -100,7 +103,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return idLineHistory;
     }
 
-    private static List<Integer> historyFromString(String value) {
+    public static List<Integer> historyFromString(String value) {
         List<Integer> idsHistory = new ArrayList<>();
         if (value != null && !value.trim().isEmpty()) {
             String[] values = value.split(", ");
@@ -168,26 +171,188 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
         manager.id = maxLoadedId;
         return manager;
+    }
 
+    public Task taskFromRequest(String body) {
+        String title = null;
+        String description = null;
+        int id = 0;
+        TaskStatus status = null;
+        long duration = 0;
+        LocalDateTime startTime = null;
 
+        String[] newString = body
+                .replaceFirst("\\{\\s*", "")
+                .replaceAll("\"", "")
+                .replaceFirst("\\s*}", "")
+                .split(",\\s*");
+
+        for (String string : newString) {
+            String[] keyValueString = string.split(": ");
+            String key = keyValueString[0];
+            String value = keyValueString[1];
+
+            switch (key) {
+                case "title":
+                    title = value;
+                    continue;
+                case "description":
+                    description = value;
+                    continue;
+                case "id":
+                    id = Integer.parseInt(value);
+                    continue;
+                case "status":
+                    status = TaskStatus.valueOf(value);
+                    continue;
+                case "startTime":
+                    startTime = LocalDateTime.parse(value, formatter);
+                    continue;
+                case "duration":
+                    duration = Long.parseLong(value);
+                    continue;
+                default:
+                    break;
+            }
+        }
+        return new Task(id, title, description, status, startTime, duration);
+    }
+
+    public Epic epicFromRequest(String body) {
+        List<Integer> subTasksIdArray = new ArrayList<>();
+        String title = null;
+        String description = null;
+        int id = 0;
+        TaskStatus status = null;
+        long duration = 0;
+        LocalDateTime startTime = null;
+
+        String[] newString = body
+                .replaceFirst("\\{\\s*", "")
+                .replaceFirst("\\s*}", "")
+                .split(",\\s*\"");
+
+        for (String string : newString) {
+            String[] keyValueString = string.split(": ");
+            String key = keyValueString[0]
+                    .replaceAll("\"", "");
+            String value = keyValueString[1]
+                    .replaceAll("\"", "");
+
+            switch (key) {
+                case "subTasksId":
+                    if (!value.equals("[]")) {
+                        String[] stringArrayValue = value
+                                .replaceFirst("\\[", "")
+                                .replaceAll("\\s*", "")
+                                .replaceFirst("]", "")
+                                .split(",");
+                        for (String idSubTask : stringArrayValue) {
+                            subTasksIdArray.add(Integer.parseInt(idSubTask));
+                        }
+                    }
+                    continue;
+                case "title":
+                    title = value;
+                    continue;
+                case "description":
+                    description = value;
+                    continue;
+                case "id":
+                    id = Integer.parseInt(value);
+                    continue;
+                case "status":
+                    status = TaskStatus.valueOf(value);
+                    continue;
+                case "startTime":
+                    if (subTasksIdArray.size() != 0) {
+                        startTime = getterEpicStartTime(subTasksIdArray);
+                    } else {
+                        startTime = LocalDateTime.parse(value, formatter);
+                    }
+                    continue;
+                case "duration":
+                    if (subTasksIdArray.size() != 0) {
+                        duration = getEpicDuration(subTasksIdArray);
+                    } else {
+                        duration = Long.parseLong(value);
+                    }
+                    continue;
+                default:
+                    break;
+            }
+        }
+        return new Epic(id, title, description, status, startTime, duration);
+    }
+
+    public SubTask subTaskFromRequest(String body) {
+        String title = null;
+        String description = null;
+        int id = 0;
+        TaskStatus status = null;
+        long duration = 0;
+        LocalDateTime startTime = null;
+        int epicId = 0;
+
+        String[] newString = body
+                .replaceFirst("\\{\\s*", "")
+                .replaceAll("\"", "")
+                .replaceFirst("\\s*}", "")
+                .split(",\\s*");
+
+        for (String string : newString) {
+            String[] keyValueString = string.split(": ");
+            String key = keyValueString[0];
+            String value = keyValueString[1];
+
+            switch (key) {
+                case "title":
+                    title = value;
+                    continue;
+                case "description":
+                    description = value;
+                    continue;
+                case "id":
+                    id = Integer.parseInt(value);
+                    continue;
+                case "status":
+                    status = TaskStatus.valueOf(value);
+                    continue;
+                case "startTime":
+                    startTime = LocalDateTime.parse(value, formatter);
+                    continue;
+                case "duration":
+                    duration = Long.parseLong(value);
+                    continue;
+                case "epicId":
+                    epicId = Integer.parseInt(value);
+                    continue;
+                default:
+                    break;
+            }
+        }
+        return new SubTask(id, title, description, status, startTime, duration, epicId);
     }
 
     @Override
-    public void createTask(Task task) { // Создание задачи конкретного типа
+    public Task createTask(Task task) { // Создание задачи конкретного типа
         super.createTask(task);
         save();
+        return task;
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         super.createEpic(epic);
         save();
+        return epic;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
+    public SubTask createSubTask(SubTask subTask) {
         super.createSubTask(subTask);
         save();
+        return subTask;
     }
 
 
@@ -212,6 +377,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return subTask;
     }
 
+    @Override
+    public Map<Integer, Task> getAllTask() { // Получение массива всех задач для конкретного типа задачи
+        return super.getAllTask();
+    }
+
+    @Override
+    public Map<Integer, Epic> getAllEpic() {
+        return super.getAllEpic();
+    }
+
+    @Override
+    public Map<Integer, SubTask> getAllSubTask() {
+        return super.getAllSubTask();
+    }
 
     @Override
     public void clearTasks() { // Удаление всех задач
@@ -250,36 +429,39 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
-    public void updateTask(Task task) { // Обновление всех типов задач
+    public Task updateTask(Task task) { // Обновление всех типов задач
         super.updateTask(task);
         save();
+        return task;
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public Epic updateEpic(Epic epic) {
         super.updateEpic(epic);
         save();
+        return epic;
     }
 
     @Override
-    public void updateSubTask(SubTask subTask) {
+    public SubTask updateSubTask(SubTask subTask) {
         super.updateSubTask(subTask);
         save();
+        return subTask;
     }
 
     @Override
-    public LocalDateTime getterEpicTaskStartTime(List<Integer> listOfSubTaskId) {
-        return super.getEpicTaskStartTime(listOfSubTaskId);
+    public LocalDateTime getterEpicStartTime(List<Integer> listOfSubTaskId) {
+        return super.getEpicStartTime(listOfSubTaskId);
     }
 
     @Override
-    public long getterEpicTaskDuration(List<Integer> listOfSubTaskId) {
-        return super.getEpicTaskDuration(listOfSubTaskId);
+    public long getterEpicDuration(List<Integer> listOfSubTaskId) {
+        return super.getEpicDuration(listOfSubTaskId);
     }
 
     @Override
-    public LocalDateTime getterEpicTaskEndTime(List<Integer> listOfSubTaskId) {
-        return super.getEpicTaskEndTime(listOfSubTaskId);
+    public LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId) {
+        return super.getEpicEndTime(listOfSubTaskId);
     }
 
     @Override
