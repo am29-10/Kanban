@@ -63,13 +63,6 @@ public class HttpTaskServer {
             System.out.println(httpExchange.getRequestURI());
             System.out.println("Началась обработка метода " + method + " запроса " + path + " от клиента.");
 
-            /*InputStream is1 = httpExchange.getRequestBody();
-            String body1 = new String(is1.readAllBytes(), StandardCharsets.UTF_8);
-            //Task newTask = gson.fromJson(body1, Task.class);
-            OutputStream os1 = httpExchange.getResponseBody();
-            String response1 = new String(is1.readAllBytes(), StandardCharsets.UTF_8);
-            Task newTask = gson.fromJson(response1, Task.class);*/
-
             switch (method) {
                 case "GET":
                     if (path.endsWith("/tasks/task")) {

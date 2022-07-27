@@ -15,6 +15,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final String keyForSave;
     private KVTaskClient kvTaskClient;
     private static Gson gson;
+    public static String HEAD = "id, type, name, status, description, dateTime, duration, epic";
 
     public HttpTaskManager(String url, String keyForSave) {
         this.keyForSave = keyForSave;
@@ -34,7 +35,6 @@ public class HttpTaskManager extends FileBackedTasksManager {
     public void save() {
         try {
             StringBuilder tasksInString = new StringBuilder();
-            String HEAD = "id, type, name, status, description, dateTime, duration, epic";
             tasksInString.append(HEAD)
                     .append("\n");
 
