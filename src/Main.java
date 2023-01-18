@@ -9,14 +9,12 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Main {
@@ -27,9 +25,6 @@ public class Main {
             .create();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        //FileBackedTasksManager manager1 = new FileBackedTasksManager(new File("Test.csv"));
-        //new KVServer().start();
-
         KVServer kvServer = new KVServer();
         kvServer.start();
         HttpTaskServer httpTaskServer = new HttpTaskServer("http://localhost:8078", "one");
@@ -75,27 +70,12 @@ public class Main {
         // Создаю задачу
         Task task3 = new Task("Сделать уроки36", "Написать конспекты", TaskStatus.NEW, LocalDateTime.of(2002, 1, 1, 1, 1), 60);
 
-        /*String bodyFromInsomnia = " {\n" +
-                "\t\t\"title\": \"Сделать уроки\",\n" +
-                "\t\t\"description\": \"Написать конспекты\",\n" +
-                "\t\t\"id\": 6,\n" +
-                "\t\t\"status\": \"NEW\",\n" +
-                "\t\t\"type\": \"TASK\",\n" +
-                "\t\t\"duration\": 60,\n" +
-                "\t\t\"startTime\": \"01.01.2003 01:01\",\n" +
-                "\t}";*/
-        //HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(gson.toJson(bodyFromInsomnia));
         HttpRequest request3 = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/tasks/task"))
                 .POST(HttpRequest.BodyPublishers.ofString((gson.toJson(task3))))
                 .build();
         HttpResponse<String> response3 = client.send(request3, HttpResponse.BodyHandlers.ofString());
         System.out.println("Ответ в формате JSON: " + response3.body());
-
-        //kvServer.stop();
-        //httpTaskServer.stop();
-
-
     }
 }
 
