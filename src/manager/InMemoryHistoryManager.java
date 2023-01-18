@@ -37,7 +37,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public Node<Task> linkLast(Task element) {
         Node<Task> oldTail = tail;
-        final Node<Task> newNode = new Node(element, null, oldTail);
+        final Node<Task> newNode = new Node<>(element, null, oldTail);
         tail = newNode;
         if (oldTail == null)
             head = newNode;
@@ -77,14 +77,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             temp = temp.getNext();
         }
         return historyTask;
-    }
-
-    public Node<Task> getTail() {
-        return tail;
-    }
-
-    public Node<Task> getHead() {
-        return head;
     }
 
     @Override
