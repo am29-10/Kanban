@@ -276,21 +276,6 @@ public class InMemoryTaskManager implements TaskManager {
         return getEpicStartTime(listOfSubTaskId);
     }
 
-    @Override
-    public long getterEpicDuration(List<Integer> listOfSubTaskId) {
-        return getEpicDuration(listOfSubTaskId);
-    }
-
-    @Override
-    public LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId) {
-        return getEpicEndTime(listOfSubTaskId);
-    }
-
-    @Override
-    public Set<Task> getterPrioritizedTasks() {
-        return listOfPrioritizedTasks;
-    }
-
     public LocalDateTime getEpicStartTime(List<Integer> listOfSubTaskId) {
         try {
             SubTask subTaskForStartTimeMin;

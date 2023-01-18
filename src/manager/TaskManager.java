@@ -53,9 +53,4 @@ public interface TaskManager {
 
     LocalDateTime getterEpicStartTime(List<Integer> listOfSubtaskIdOfTheFirstEpic);
 
-    long getterEpicDuration(List<Integer> listOfSubtaskIdOfTheFirstEpic);
-
-    LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId);
-
-    Set<Task> getterPrioritizedTasks();
 }
