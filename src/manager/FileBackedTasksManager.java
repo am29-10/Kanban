@@ -72,7 +72,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             TaskStatus status = TaskStatus.valueOf(values[3]);
             String description = values[4];
             LocalDateTime startTime = LocalDateTime.parse(values[5], formatter);
-            Long duration = Long.valueOf(values[6]);
+            long duration = Long.parseLong(values[6]);
 
 
             switch (type) {
@@ -454,18 +454,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return super.getEpicStartTime(listOfSubTaskId);
     }
 
-    @Override
-    public long getterEpicDuration(List<Integer> listOfSubTaskId) {
-        return super.getEpicDuration(listOfSubTaskId);
-    }
-
-    @Override
-    public LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId) {
-        return super.getEpicEndTime(listOfSubTaskId);
-    }
-
-    @Override
-    public Set<Task> getterPrioritizedTasks() {
-        return super.getPrioritizedTasks();
-    }
 }
